@@ -2,7 +2,7 @@
     <div class="container">
         <div class="footer-content">
             <div class="footer-column">
-                <h3>About CofFee</h3>
+                <h3>About CoFFee</h3>
                 <div class="social-links">
                     <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
