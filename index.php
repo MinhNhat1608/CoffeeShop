@@ -1,5 +1,5 @@
 <?php include("includes/header.php"); ?>
-<?php include("includes/connect.php"); ?>
+<?php include("config/database.php"); ?>
 
 <?php
 $sql_featured = "
