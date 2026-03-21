@@ -3,7 +3,7 @@
     --coffee-medium: #6F4E37;
     --coffee-light: #C4A484;
     --coffee-accent: #D2B48C;
-    --coffee-cream: #F5F5DC;
+    --coffee-cream: #F2F2D7;
     --coffee-gold: #D4AF37;
     --text-dark: #2C2416;
     --text-light: #f3f3f3;
@@ -17,7 +17,7 @@
 }
 
 body {
-    background: #161515;
+    background: #F2F2D7;
 }
 
 .admin-container {
@@ -124,7 +124,8 @@ body {
 }
 
 .card {
-    background: var(--coffee-dark);
+    background: #ffffff; 
+    color: var(--text-dark); 
     padding: 30px;
     border-radius: 15px;
     text-align: center;
@@ -138,7 +139,8 @@ body {
 }
 
 .table-section {
-    background: var(--coffee-dark);
+    background: #ffffff; 
+    color: var(--text-dark); 
     padding: 25px;
     border-radius: 15px;
     color: var(--coffee-cream);

@@ -145,7 +145,7 @@ textarea{
                 </div>
 
                 <div class="form-group">
-                    <label>Price ($):</label>
+                    <label>Price (VNĐ):</label>
                     <input type="text" name="price"
                     value="<?php echo $product['price']; ?>">
                 </div>

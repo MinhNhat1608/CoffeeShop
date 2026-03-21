@@ -122,7 +122,7 @@ $result = mysqli_query($conn, $query);
                     <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                         <tr>
                             <td><?php echo $row['id']; ?></td>
-                            <td>$<?php echo $row['total']; ?></td>
+                            <td><?php echo $row['total']; ?> VNĐ</td>
                             <td><?php echo $row['status']; ?></td>
                             <td>
                                 <a href="order_detail.php?id=<?php echo $row['id']; ?>" class="btn view">View</a>

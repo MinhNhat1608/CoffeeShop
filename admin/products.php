@@ -115,7 +115,7 @@ $result = mysqli_query($conn, $query);
                         <tr>
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo $row['name']; ?></td>
-                            <td>$<?php echo $row['price']; ?></td>
+                            <td><?php echo $row['price']; ?>VNĐ</td>
                             <td>
                                 <img src="/webbanhang/assets/images/<?php echo $row['image']; ?>" width="60">
                             </td>

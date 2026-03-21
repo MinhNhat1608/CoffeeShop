@@ -129,7 +129,7 @@ $total_posts = mysqli_fetch_assoc($post_result)['total_posts'];
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                             <tr>
                                 <td><?php echo $row['name']; ?></td>
-                                <td><?php echo number_format($row['price']); ?> $</td>
+                                <td><?php echo number_format($row['price']); ?> VNĐ</td>
                                 <td>
                                     <img src="../assets/images/<?php echo $row['image']; ?>" width="60">
                                 </td>

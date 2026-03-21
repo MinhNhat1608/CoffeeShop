@@ -154,7 +154,7 @@ if (isset($_POST['add'])) {
                 </div>
 
                 <div class="form-group">
-                    <label>Price ($):</label>
+                    <label>Price (VNĐ):</label>
                     <input type="text" name="price">
                 </div>
 
