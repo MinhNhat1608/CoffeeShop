@@ -221,7 +221,7 @@ $total += $subtotal;
     <?php if(isset($_SESSION['user'])){ ?>
         <a href="checkout.php" class="checkout-btn">Thanh toán</a>
     <?php } else { ?>
-        <a href="login.php" class="checkout-btn">Thanh toán</a>
+        <a href="../login.php" class="checkout-btn">Thanh toán</a>
     <?php } ?>
 </div>
 
