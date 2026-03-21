@@ -1,21 +1,32 @@
 <?php
-include("../includes/header.php");
-
 session_start();
+include("../config/database.php");
 
-$id = $_GET['id'];
+$id = (int)$_GET['id'];
+$qty = isset($_GET['qty']) ? (int)$_GET['qty'] : 1;
 
-if(isset($_SESSION['cart'][$id])){
-    
-    $_SESSION['cart'][$id]++;
+$query = "SELECT * FROM products WHERE id = $id";
+$result = mysqli_query($conn, $query);
+$product = mysqli_fetch_assoc($result);
 
-}else{
-
-    $_SESSION['cart'][$id] = 1;
-
+if(!$product){
+    die("Product not found");
 }
 
-header("Location: pages/cart.php");
+if(!isset($_SESSION['cart'])){
+    $_SESSION['cart'] = [];
+}
 
-?>
-<?php include("../includes/footer.php"); ?>
+if(isset($_SESSION['cart'][$id])){
+    $_SESSION['cart'][$id]['quantity'] += $qty;
+} else {
+    $_SESSION['cart'][$id] = [
+        "name" => $product['name'],
+        "price" => (float)$product['price'],
+        "image" => $product['image'],
+        "quantity" => $qty
+    ];
+}
+
+header("Location: cart.php");
+exit;
