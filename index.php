@@ -1,108 +1,84 @@
 <?php include("includes/header.php"); ?>
+<?php include("includes/connect.php"); ?>
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-subtitle">
-                    <i class="fas fa-seedling"></i>
-                    Ethically Sourced Beans
-                </div>
-                <h1 class="hero-title">Artisan Coffee <br><span>Crafted with Passion</span></h1>
-                <p class="hero-text">
-                    Discover single-origin coffees roasted to perfection in small batches
-                    for exceptional flavor. Experience the journey from bean to cup with
-                    our master roasters.
-                </p>
-                <div class="hero-buttons">
-                    <a href="/webbanhang/pages/products.php" class="btn btn-primary">Sản phẩm mới</a>
-                    <a href="/webbanhang/pages/posts.php" class="btn btn-secondary">Bài viết hay</a>
-                </div>
+<?php
+$sql_featured = "
+    SELECT p.*, c.name AS category_name
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    WHERE p.name IN ('Espresso', 'Trà Đào Cam Sả', 'Tiramisu')
+    ORDER BY FIELD(p.name, 'Espresso', 'Trà Đào Cam Sả', 'Tiramisu')
+    LIMIT 3
+";
+$result_featured = mysqli_query($conn, $sql_featured);
+?>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-subtitle">
+                <i class="fas fa-seedling"></i>
+                Hạt cà phê tuyển chọn
             </div>
-            <img src="../webbanhang/assets/images/1.jpg" alt="" width="370px">
-        </div>
-    </section>
-
-    <section class="products" id="products">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-subtitle">Our Selection</div>
-                <h2 class="section-title">Signature Coffee Blends</h2>
-                <p class="section-desc">Each batch is carefully roasted to highlight the unique characteristics of the
-                    beans.</p>
-            </div>
-
-            <div class="product-grid">
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="../webbanhang/assets/images/2.jpg" alt="Ethiopian Yirgacheffe">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-tag">BESTSELLER</div>
-                        <h3 class="product-title">Ethiopian Yirgacheffe</h3>
-                        <p class="product-desc">
-                            Floral notes with bright citrus acidity and a tea-like body. Light roast.
-                        </p>
-                        <div class="product-footer">
-                            <div class="product-price">$18.99</div>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="../webbanhang/assets/images/3.jpg" alt="Colombian Supremo">
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">Colombian Supremo</h3>
-                        <p class="product-desc">
-                            Rich caramel sweetness with nutty undertones and balanced acidity.
-                            Medium roast.
-                        </p>
-                        <div class="product-footer">
-                            <div class="product-price">$16.99</div>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="product-card">
-                    <div class="product-img">
-                        <img src="../webbanhang/assets/images/4.jpg" alt="Dark Roast Espresso">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-tag">NEW</div>
-                        <h3 class="product-title">Dark Roast Espresso</h3>
-                        <p class="product-desc">Bold and intense with
-                            dark chocolate notes and a creamy mouthfeel. Dark
-                            roast.</p>
-                        <div class="product-footer">
-                            <div class="product-price">$17.99</div>
-                            <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <h1 class="hero-title">Cà phê thủ công <br><span>Đậm vị từ tâm huyết</span></h1>
+            <p class="hero-text">
+                Khám phá những dòng cà phê nguyên bản được rang theo từng mẻ nhỏ,
+                chăm chút để giữ trọn hương vị tinh tế. Từ hạt cà phê nơi nông trại
+                đến tách cà phê trên tay bạn, mọi công đoạn đều được nâng niu bởi
+                những nghệ nhân rang xay giàu kinh nghiệm.
+            </p>
+            <div class="hero-buttons">
+                <a href="/webbanhang/pages/products.php" class="btn btn-primary">Khám phá sản phẩm</a>
+                <a href="/webbanhang/pages/posts.php" class="btn btn-secondary">Góc chuyện cà phê</a>
             </div>
         </div>
-    </section>
+        <img src="../webbanhang/assets/images/1.jpg" alt="Cà phê thủ công" width="370px">
+    </div>
+</section>
 
-    <?php include("includes/footer.php"); ?>
+<section class="products" id="products">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle">Tuyển chọn nổi bật</div>
+            <h2 class="section-title">Những sản phẩm đặc trưng</h2>
+            <p class="section-desc">
+                Những món được yêu thích và mang dấu ấn riêng của quán, hài hòa từ hương vị đến trải nghiệm.
+            </p>
+        </div>
+
+        <div class="product-grid">
+            <?php while($row = mysqli_fetch_assoc($result_featured)) { ?>
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="../webbanhang/assets/images/<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                    </div>
+                    <div class="product-info">
+                        <?php if($row['name'] == 'Espresso') { ?>
+                            <div class="product-tag">BÁN CHẠY</div>
+                        <?php } elseif($row['name'] == 'Trà Đào Cam Sả') { ?>
+                            <div class="product-tag">YÊU THÍCH</div>
+                        <?php } elseif($row['name'] == 'Tiramisu') { ?>
+                            <div class="product-tag">NỔI BẬT</div>
+                        <?php } ?>
+
+                        <h3 class="product-title"><?php echo $row['name']; ?></h3>
+                        <p class="product-desc"><?php echo $row['description']; ?></p>
+
+                        <div class="product-footer">
+                            <div class="product-price"><?php echo number_format($row['price'], 0, ',', '.'); ?>đ</div>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</section>
+
+<?php include("includes/footer.php"); ?>
