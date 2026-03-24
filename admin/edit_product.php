@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['admin'])){
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -20,169 +20,207 @@ if(isset($_POST['update'])){
     $category_id = $_POST['category_id'];
 
     if(!empty($_FILES['image']['name'])){
+
+        if(!empty($product['image'])){
+            $oldPath = "../assets/images/" . $product['image'];
+            if(file_exists($oldPath)){
+                unlink($oldPath);
+            }
+        }
+
         $image = $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/".$image);
+        $tmp = $_FILES['image']['tmp_name'];
+
+        $image_name = time() . "_" . basename($image);
+        $target = "../assets/images/" . $image_name;
+
+        move_uploaded_file($tmp, $target);
+
     } else {
-        $image = $product['image'];
+        $image_name = $product['image'];
     }
 
     $query = "UPDATE products 
-    SET name='$name', price='$price', description='$description',
-        image='$image', category_id='$category_id'
-    WHERE id=$id";
+        SET name='$name',
+            price='$price',
+            description='$description',
+            image='$image_name',
+            category_id='$category_id'
+        WHERE id=$id";
 
     mysqli_query($conn,$query);
     header("Location: products.php");
     exit();
 }
-
 ?>
+
 <style>
-body{
-    background:#0d0d0d;
-    color:white;
-    font-family: Arial;
+.main-content{
+    max-width: 1120px;
+    margin-top: 10px;
+    margin-left: 150px ;
+    padding: 0 16px 24px;
 }
 
-.container{
-    margin-left:500px;
-    padding:30px;
-    display:flex;
-    justify-content:center;
+/* TOPBAR */
+.topbar{
+    background: #111827;
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
+.topbar h2{
+    margin: 0;
+}
+
+/* CARD */
 .card{
-    background: linear-gradient(135deg, #3b2318, #1f1410);
-    padding:25px;
-    border-radius:15px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
 }
 
-.title{
-    color:#ffcc00;
-    font-size:22px;
-    margin-bottom:20px;
-    font-size: 28px;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap:15px;
-}
-
+/* FORM */
 .form-group{
-    display:flex;
-    flex-direction:column;
+    margin-bottom: 16px;
+    color: #111827;
 }
 
 label{
-    margin-bottom:5px;
-    font-size:14px;
-    font-size: 20px;
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
 }
 
 input, select, textarea{
-    padding:10px;
-    border-radius:8px;
-    border:1px solid rgba(255,255,255,0.2);
-    background:#2b1b15;
-    color:white;
-    font-size: 20px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
 
 textarea{
-    height:100px;
+    min-height: 100px;
 }
 
+/* IMAGE */
 .upload-box{
-    border:2px dashed rgba(255,255,255,0.3);
-    border-radius:10px;
-    padding:20px;
-    text-align:center;
-    cursor:pointer;
+    border: 2px dashed #ccc;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f9fafb;
+}
+
+.upload-box:hover{
+    background: #f1f5f9;
 }
 
 .upload-box img{
-    width:80px;
-    margin-bottom:10px;
+    width: 100px;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
+/* BUTTON */
 .actions{
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .btn{
-    padding:10px 20px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    margin-right:10px;
-    text-decoration:none;
-    display:inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
 }
 
 .btn-save{
-    background:#ffcc00;
-    color:black;
+    background: #2563eb;
+    color: #fff;
+}
+
+.btn-save:hover{
+    background: #1d4ed8;
 }
 
 .btn-cancel{
-    background:#e74c3c;
-    color:white;
+    background: #ef4444;
+    color: #fff;
+}
+
+.btn-cancel:hover{
+    background: #dc2626;
 }
 </style>
 
-<div class="container">
+<div class="main-content">
+
+    <div class="topbar">
+        <h2>Sửa sản phẩm</h2>
+    </div>
+
     <div class="card">
-        <div class="title">Edit Product</div>
+
         <form method="POST" enctype="multipart/form-data">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Product Name:</label>
-                    <input type="text" name="name"
-                    value="<?php echo $product['name']; ?>">
-                </div>
 
-                <div class="form-group">
-                    <label>Price (VNĐ):</label>
-                    <input type="text" name="price"
-                    value="<?php echo $product['price']; ?>">
-                </div>
+            <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input type="text" name="name"
+                    value="<?php echo htmlspecialchars($product['name']); ?>">
+            </div>
 
-                <div class="form-group">
-                    <label>Category:</label>
-                    <select name="category_id">
-                        <?php while($row = mysqli_fetch_assoc($categories)) { ?>
-                            <option value="<?php echo $row['id']; ?>"
-                                <?php if($row['id'] == $product['category_id']) echo "selected"; ?>>
-                                <?php echo $row['name']; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Giá (VNĐ)</label>
+                <input type="text" name="price"
+                    value="<?php echo htmlspecialchars($product['price']); ?>">
+            </div>
 
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Description:</label>
-                    <textarea name="description"><?php echo $product['description']; ?></textarea>
-                </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select name="category_id">
+                    <?php while($row = mysqli_fetch_assoc($categories)) { ?>
+                        <option value="<?php echo $row['id']; ?>"
+                            <?php if($row['id'] == $product['category_id']) echo "selected"; ?>>
+                            <?php echo $row['name']; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
 
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Product Image:</label>
-                    <label class="upload-box">
-                        <img src="../uploads/<?php echo $product['image']; ?>">
-                        Click to change image
-                        <input type="file" name="image" hidden>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea name="description"><?php echo htmlspecialchars($product['description']); ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Ảnh sản phẩm</label>
+
+                <label class="upload-box">
+                    <?php if(!empty($product['image'])){ ?>
+                        <img src="../assets/images/<?php echo $product['image']; ?>">
+                    <?php } else { ?>
+                        No image
+                    <?php } ?>
+
+                    <br>Click để đổi ảnh
+                    <input type="file" name="image" hidden>
+                </label>
             </div>
 
             <div class="actions">
-                <button class="btn btn-save" name="update">Update</button>
-                <a href="products.php" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-save" name="update">Cập nhật</button>
+                <a href="products.php" class="btn btn-cancel">Hủy</a>
             </div>
+
         </form>
+
     </div>
+
 </div>
 
 <?php include("../includes/footer_admin.php"); ?>

@@ -1,11 +1,16 @@
 <?php
 session_start();
 
-$id = $_GET['id'];
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: cart.php");
+    exit();
+}
 
-if(isset($_SESSION['cart'][$id])){
+$id = (int)$_GET['id'];
+
+if (isset($_SESSION['cart']) && isset($_SESSION['cart'][$id])) {
     unset($_SESSION['cart'][$id]);
 }
 
 header("Location: cart.php");
-exit;
+exit();

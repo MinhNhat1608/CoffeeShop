@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -9,194 +9,191 @@ include("../config/database.php");
 include("../includes/header_admin.php");
 
 if (isset($_POST['add'])) {
+
     $title = $_POST['title'];
     $content = $_POST['content'];
     $description = $_POST['description'];
+
     $image = $_FILES['image']['name'];
-    move_uploaded_file(
-        $_FILES['image']['tmp_name'],
-        "../assets/images/" . $image
-    );
+    $tmp = $_FILES['image']['tmp_name'];
 
-    $query = "INSERT INTO posts(title,content,description,image)
-VALUES('$title','$content','$description','$image')";
+    $image_name = time() . "_" . basename($image);
+    $target = "../assets/images/" . $image_name;
 
-    mysqli_query($conn, $query);
-    header("Location: posts.php");
-    exit();
+    if (move_uploaded_file($tmp, $target)) {
+
+        $query = "INSERT INTO posts(title,content,description,image)
+                  VALUES('$title','$content','$description','$image_name')";
+
+        if (mysqli_query($conn, $query)) {
+            header("Location: posts.php");
+            exit();
+        } else {
+            echo "<p style='color:red'>Lỗi database</p>";
+        }
+
+    } else {
+        echo "<p style='color:red'>Upload ảnh thất bại!</p>";
+    }
+}
+?>
+
+<style>
+.main-content{
+    max-width: 1120px;
+    margin-top: 10px;
+    margin-left: 150px ;
+    padding: 0 16px 24px;
 }
 
-?>
-<style>
-    .post-card {
-        max-width: 1200px;
-        width: 50%;
-        margin: 40px auto;
-        margin-left: 550px;
-        padding: 20px;
-        border-radius: 20px;
-        background: rgba(44, 30, 20, 0.6);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(200, 155, 109, 0.2);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-        color: #f3e5d8;
-    }
 
-    .post-card h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 28px;
-        color: #c89b6d;
-        font-weight: bold;
-        font-size: 28px;
-    }
+/* TOPBAR */
+.topbar{
+    background: #111827;
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
 
-    .form-group {
-        margin-bottom: 25px;
-    }
+.topbar h2{
+    margin: 0;
+}
 
-    .form-group label {
-        display: block;
-        margin-bottom: 10px;
-        font-weight: 500;
-        color: #d2b48c;
-        font-size: 20px;
-    }
+/* CARD */
+.post-card{
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
 
-    .form-group input,
-    .form-group textarea {
-        width: 100%;
-        padding: 12px 15px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        outline: none;
-        background: rgba(0, 0, 0, 0.2);
-        color: #fff;
-        transition: all 0.3s ease;
-        box-sizing: border-box;
-    }
+/* FORM */
+.form-group{
+    margin-bottom: 18px;
+}
 
-    .form-group textarea {
-        height: 80px;
-        resize: none;
-    }
+.form-group label{
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #111827;
+}
 
-    .form-group input:focus,
-    .form-group textarea:focus {
-        border: 1px solid #c89b6d;
-        background: rgba(0, 0, 0, 0.3);
-        box-shadow: 0 0 8px rgba(200, 155, 109, 0.3);
-    }
+.form-group input,
+.form-group textarea{
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
 
-    .upload-box {
-        border: 2px dashed rgba(200, 155, 109, 0.5);
-        padding: 30px;
-        text-align: center;
-        border-radius: 15px;
-        cursor: pointer;
-        background: rgba(255, 255, 255, 0.03);
-        transition: 0.3s;
-        display: block;
-    }
+.form-group textarea{
+    min-height: 100px;
+}
 
-    .upload-box:hover {
-        background: rgba(200, 155, 109, 0.1);
-        border-color: #c89b6d;
-    }
+/* UPLOAD */
+.upload-box{
+    border: 2px dashed #ccc;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f9fafb;
+}
 
-    .upload-box input {
-        display: none;
-    }
+.upload-box:hover{
+    background: #f1f5f9;
+}
 
-    .upload-box i {
-        display: block;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
+.upload-box input{
+    display: none;
+}
 
-    .preview {
-        margin-top: 15px;
-    }
+.preview img{
+    max-width: 120px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
 
-    .preview img {
-        max-width: 120px;
-        border-radius: 8px;
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    }
+/* BUTTON */
+.btn-submit{
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
 
-    .btn-submit {
-        width: 100%;
-        padding: 10px;
-        border-radius: 12px;
-        border: none;
-        background: linear-gradient(135deg, #8b5e3c, #c89b6d);
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-top: 10px;
-    }
-
-    .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .back-container {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .btn-back {
-        color: #c89b6d;
-        text-decoration: none;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-    .btn-back:hover {
-        text-decoration: underline;
-        opacity: 0.8;
-    }
+.btn-submit:hover{
+    background: #1d4ed8;
+}
 </style>
-<div class="post-card">
-    <h2> Add New Post</h2>
-    <form method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label>Title</label>
-            <input type="text" name="title" required>
-        </div>
 
-        <div class="form-group">
-            <label>Content</label>
-            <textarea name="content" required></textarea>
-        </div>
+<div class="main-content">
 
-        <div class="form-group">
-            <label>Description</label>
-            <textarea name="description" required></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Image</label>
-            <label class="upload-box">
-                <span> Click to upload image</span>
-                <input type="file" name="image" id="imageInput" required>
-            </label>
-            <div class="preview" id="preview">
-            </div>
-        </div>
-
-        <button type="submit" class="btn-submit" name="add"> Publish Post</button>
-    </form>
-
-    <div class="back-container">
-        <a href="posts.php" class="btn-back">← Back to Posts</a>
+    <div class="topbar">
+        <h2>Thêm bài viết</h2>
     </div>
+
+    <div class="post-card">
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label>Tiêu đề</label>
+                <input type="text" name="title" required>
+            </div>
+
+            <div class="form-group">
+                <label>Nội dung</label>
+                <textarea name="content" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea name="description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Hình ảnh</label>
+
+                <label class="upload-box">
+                    Click để chọn ảnh
+                    <input type="file" name="image" id="imageInput" required>
+                </label>
+
+                <div class="preview" id="preview"></div>
+            </div>
+
+            <button type="submit" class="btn-submit" name="add">
+                Đăng bài
+            </button>
+
+        </form>
+
+    </div>
+
 </div>
+
 <?php include("../includes/footer_admin.php"); ?>
+
+<script>
+document.getElementById("imageInput").addEventListener("change", function () {
+    const file = this.files[0];
+    const preview = document.getElementById("preview");
+
+    preview.innerHTML = "";
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            preview.innerHTML = `<img src="${e.target.result}">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -11,187 +11,217 @@ include("../includes/header_admin.php");
 $categories = mysqli_query($conn, "SELECT * FROM categories");
 
 if (isset($_POST['add'])) {
+
     $name = $_POST['name'];
     $price = $_POST['price'];
     $description = $_POST['description'];
-    $category_id = $_POST['category_id']; // sửa ở đây
-    $image = $_FILES['image']['name'];
+    $category_id = $_POST['category_id'];
 
-    move_uploaded_file($_FILES['image']['tmp_name'], "../uploads/" . $image);
+    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
 
-    $query = "INSERT INTO products(name,price,description,image,category_id)
-    VALUES('$name','$price','$description','$image','$category_id')";
+        $image = $_FILES['image']['name'];
+        $tmp = $_FILES['image']['tmp_name'];
 
-    mysqli_query($conn, $query);
-    header("Location: products.php");
-    exit();
+        $image_name = time() . "_" . basename($image);
+        $target = "../assets/images/" . $image_name;
+
+        if (move_uploaded_file($tmp, $target)) {
+
+            $query = "INSERT INTO products(name,price,description,image,category_id)
+                      VALUES('$name','$price','$description','$image_name','$category_id')";
+
+            mysqli_query($conn, $query);
+            header("Location: products.php");
+            exit();
+
+        } else {
+            echo "<p style='color:red'>Upload ảnh thất bại!</p>";
+        }
+
+    } else {
+        echo "<p style='color:red'>Bạn chưa chọn ảnh!</p>";
+    }
 }
 ?>
 
 <style>
-    body {
-        background: #0d0d0d;
-        color: white;
-        font-family: Arial;
-    }
+.main-content{
+    max-width: 1120px;
+    margin-top: 10px;
+    margin-left: 150px ;
+    padding: 0 16px 24px;
+}
 
-    .container {
-        max-width: 1200px;
-        width: 50%;
-        margin: 40px auto;
-        margin-left: 550px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        box-sizing: border-box;
-        background: #0d0d0d;
-    }
+/* TOPBAR */
+.topbar{
+    background: #111827;
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
 
-    .card {
-        background: linear-gradient(135deg, #3b2318, #1f1410);
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-        width: 100%;
-        max-width: 700px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+.topbar h2{
+    margin: 0;
+}
 
-    .actions {
-        margin-top: 30px;
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-    }
+/* CARD */
+.card{
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
 
-    .title {
-        color: #ffcc00;
-        font-size: 22px;
-        margin-bottom: 20px;
-        font-size: 28px;
-    }
+/* FORM */
+.form-group{
+    margin-bottom: 16px;
+    color: #111827;
+}
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 15px;
-    }
+label{
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
 
-    .btn-cancel {
-        text-decoration: none;
-    }
+input, select, textarea{
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
+textarea{
+    min-height: 100px;
+}
 
-    label {
-        margin-bottom: 5px;
-        font-size: 14px;
-        font-size: 20px;
-    }
+/* UPLOAD */
+.upload-box{
+    border: 2px dashed #ccc;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #f9fafb;
+}
 
-    input,
-    select,
-    textarea {
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: #2b1b15;
-        color: white;
-    }
+.upload-box:hover{
+    background: #f1f5f9;
+}
 
-    textarea {
-        height: 100px;
-    }
+.preview img{
+    width: 100px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
 
-    .upload-box {
-        border: 2px dashed rgba(255, 255, 255, 0.3);
-        border-radius: 10px;
-        padding: 30px;
-        text-align: center;
-        cursor: pointer;
-    }
+/* BUTTON */
+.actions{
+    margin-top: 20px;
+}
 
-    .upload-box:hover {
-        background: rgba(255, 255, 255, 0.05);
-    }
+.btn{
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
 
-    .actions {
-        margin-top: 20px;
-    }
+.btn-save{
+    background: #2563eb;
+    color: #fff;
+}
 
-    .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-right: 10px;
-    }
+.btn-save:hover{
+    background: #1d4ed8;
+}
 
-    .btn-save {
-        background: #ffcc00;
-        color: black;
-    }
+.btn-cancel{
+    background: #ef4444;
+    color: #fff;
+}
 
-    .btn-cancel {
-        background: #e74c3c;
-        color: white;
-    }
+.btn-cancel:hover{
+    background: #dc2626;
+}
 </style>
 
-<div class="container">
+<div class="main-content">
+
+    <div class="topbar">
+        <h2>Thêm sản phẩm</h2>
+    </div>
+
     <div class="card">
-        <div class="title">Add New Product</div>
 
         <form method="POST" enctype="multipart/form-data">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Product Name:</label>
-                    <input type="text" name="name">
-                </div>
 
-                <div class="form-group">
-                    <label>Price (VNĐ):</label>
-                    <input type="text" name="price">
-                </div>
+            <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input type="text" name="name" required>
+            </div>
 
-                <div class="form-group">
-                    <label>Category:</label>
-                    <select name="category_id">
-                        <option value="">-- Select Category --</option>
-                        <?php while ($row = mysqli_fetch_assoc($categories)) { ?>
-                            <option value="<?php echo $row['id']; ?>">
-                                <?php echo $row['name']; ?>
-                            </option>
-                        <?php } ?>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label>Giá (VNĐ)</label>
+                <input type="text" name="price" required>
+            </div>
 
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Description:</label>
-                    <textarea name="description"></textarea>
-                </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select name="category_id" required>
+                    <option value="">-- Chọn danh mục --</option>
+                    <?php while ($row = mysqli_fetch_assoc($categories)) { ?>
+                        <option value="<?php echo $row['id']; ?>">
+                            <?php echo $row['name']; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+            </div>
 
-                <div class="form-group" style="grid-column: span 2;">
-                    <label>Product Image:</label>
-                    <label class="upload-box">
-                        Click to upload image
-                        <input type="file" name="image" hidden>
-                    </label>
-                </div>
+            <div class="form-group">
+                <label>Mô tả</label>
+                <textarea name="description"></textarea>
+            </div>
 
+            <div class="form-group">
+                <label>Ảnh sản phẩm</label>
+
+                <label class="upload-box">
+                    Click để chọn ảnh
+                    <input type="file" name="image" id="imageInput" hidden>
+                </label>
+
+                <div class="preview" id="preview"></div>
             </div>
 
             <div class="actions">
-                <button class="btn btn-save" name="add">Save Product</button>
-                <a href="products.php" class="btn btn-cancel">Cancel</a>
+                <button class="btn btn-save" name="add">Lưu sản phẩm</button>
+                <a href="products.php" class="btn btn-cancel">Hủy</a>
             </div>
 
         </form>
+
     </div>
+
 </div>
+
+<script>
+document.getElementById("imageInput").addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById("preview");
+
+    preview.innerHTML = "";
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}">`;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 <?php include("../includes/footer_admin.php"); ?>

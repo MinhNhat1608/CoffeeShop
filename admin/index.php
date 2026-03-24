@@ -2,155 +2,300 @@
 session_start();
 
 if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
+    exit();
 }
 
 include("../config/database.php");
+include("../includes/header_admin.php");
+
+// DATA
+$total_products = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM products"))['total'];
+$total_orders   = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM orders"))['total'];
+$total_posts    = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS total FROM posts"))['total'];
 
 $query = "SELECT * FROM products ORDER BY id DESC LIMIT 5";
 $result = mysqli_query($conn, $query);
-
-$product_query = "SELECT COUNT(*) AS total_products FROM products";
-$product_result = mysqli_query($conn, $product_query);
-$total_products = mysqli_fetch_assoc($product_result)['total_products'];
-
-$order_query = "SELECT COUNT(*) AS total_orders FROM orders";
-$order_result = mysqli_query($conn, $order_query);
-$total_orders = mysqli_fetch_assoc($order_result)['total_orders'];
-
-$post_query = "SELECT COUNT(*) AS total_posts FROM posts";
-$post_result = mysqli_query($conn, $post_query);
-$total_posts = mysqli_fetch_assoc($post_result)['total_posts'];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<style>
+.main-content{
+    max-width: 1120px;
+    margin-top: 10px;
+    margin-left: 150px ;
+    padding: 0 16px 24px;
+}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - BrewHaven</title>
+.topbar{
+    background: #111827;
+    color: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
 
-    <link rel="stylesheet" href="/webbanhang/assets/css/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <style>
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
+.topbar h2{
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
 
-        .btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: 0.3s;
-        }
+.quick-actions{
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
 
-        .btn.edit {
-            background: #3498db;
-        }
+.btn{
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
 
-        .btn.edit:hover {
-            background: #2980b9;
-        }
+.btn-primary{
+    background: #2563eb;
+    color: #fff;
+}
 
-        .btn.delete {
-            background: #e74c3c;
-        }
+.btn-primary:hover{
+    background: #1d4ed8;
+}
 
-        .btn.delete:hover {
-            background: #c0392b;
-        }
-    </style>
-</head>
+.btn-danger{
+    background: #ef4444;
+    color: #fff;
+}
 
-<body>
+.btn-danger:hover{
+    background: #dc2626;
+}
 
-    <div class="admin-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fa-solid fa-mug-hot"></i>
-                <span>CofFee</span>
-            </div>
+.btn-dark{
+    background: #111827;
+    color: #fff;
+}
 
-            <ul class="menu">
-                <li><i class="fa-solid fa-chart-line"></i><a href="index.php"> Home</a></li>
-                <li><i class="fa-solid fa-mug-saucer"></i><a href="products.php"> Products</a></li>
-                <li><i class="fa-solid fa-cart-shopping"></i><a href="orders.php"> Orders</a></li>
-                <li><i class="fa-solid fa-list"></i><a href="categories.php"> Categories</a></li>
-                <li><i class="fa-solid fa-newspaper"></i><a href="posts.php"> Posts</a></li>
-                <li><a href="/webbanhang/logout.php"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
-            </ul>
-        </aside>
+.btn-dark:hover{
+    background: #1f2937;
+}
 
-        <main class="main-content">
-            <header class="topbar">
-                <h2>Dashboard Overview</h2>
-                <div class="admin-user">
-                    <i class="fa-solid fa-user"></i>
-                    Admin
-                </div>
-            </header>
+.stats{
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
 
-            <div class="stats">
+.stat-card{
+    flex: 1;
+    min-width: 200px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    text-align: center;
+}
 
-                <div class="card">
-                    <h4>Products</h4>
-                    <p><?php echo $total_products; ?></p>
-                </div>
+.stat-card h4{
+    margin: 0;
+    font-size: 16px;
+    color: #6b7280;
+}
 
-                <div class="card">
-                    <h4>Orders</h4>
-                    <p><?php echo $total_orders; ?></p>
-                </div>
+.stat-card p{
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+}
 
-                <div class="card">
-                    <h4>Posts</h4>
-                    <p><?php echo $total_posts; ?></p>
-                </div>
-            </div>
+.table-card{
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
 
-            <div class="table-section">
-                <h3>Recent Products</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Image</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+.table-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.table-title{
+    font-size: 22px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.table-wrap{
+    overflow-x: auto;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+}
+
+thead{
+    background: #7c4f2c;
+    color: #fff;
+}
+
+th, td{
+    padding: 14px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+tbody tr{
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:hover{
+    background: #f9fafb;
+}
+
+.product-img{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.no-image{
+    width: 60px;
+    height: 60px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 12px;
+}
+
+.price{
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.action-group{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px){
+    .topbar h2{
+        font-size: 22px;
+    }
+
+    .table-title{
+        font-size: 20px;
+    }
+}
+</style>
+
+<div class="main-content">
+
+    <div class="topbar">
+        <h2>Dashboard</h2>
+    </div>
+
+    <div class="quick-actions">
+        <a href="add_product.php" class="btn btn-primary">+ Thêm sản phẩm</a>
+        <a href="orders.php" class="btn btn-dark">Quản lý đơn hàng</a>
+        <a href="add_post.php" class="btn btn-primary">+ Thêm bài viết</a>
+        <a href="categories.php" class="btn btn-dark">Quản lý danh mục</a>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h4>Sản phẩm</h4>
+            <p><?php echo $total_products; ?></p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Đơn hàng</h4>
+            <p><?php echo $total_orders; ?></p>
+        </div>
+
+        <div class="stat-card">
+            <h4>Bài viết</h4>
+            <p><?php echo $total_posts; ?></p>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-header">
+            <div class="table-title">Sản phẩm mới</div>
+            <a href="products.php" class="btn btn-dark">Xem tất cả</a>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Giá</th>
+                        <th>Ảnh</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php if ($result && mysqli_num_rows($result) > 0) { ?>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <?php
+                                $imageName = $row['image'];
+                                $imagePath = "../assets/images/" . $imageName;
+                            ?>
                             <tr>
-                                <td><?php echo $row['name']; ?></td>
-                                <td><?php echo number_format($row['price']); ?> VNĐ</td>
+                                <td><strong><?php echo $row['id']; ?></strong></td>
+                                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                <td class="price"><?php echo number_format($row['price']); ?> đ</td>
                                 <td>
-                                    <img src="../assets/images/<?php echo $row['image']; ?>" width="60">
+                                    <?php if (!empty($imageName) && file_exists($imagePath)) { ?>
+                                        <img src="<?php echo $imagePath; ?>" class="product-img" alt="">
+                                    <?php } else { ?>
+                                        <div class="no-image">No image</div>
+                                    <?php } ?>
                                 </td>
                                 <td>
-                                <td class="actions">
-                                    <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="btn edit">
-                                        <i></i> Edit
-                                    </a>
-                                    <a href="delete_product.php?id=<?php echo $row['id']; ?>"
-                                        class="btn delete"
-                                        onclick="return confirm('Xóa sản phẩm này?')">
-                                        <i></i> Delete
-                                    </a>
-                                </td>
+                                    <div class="action-group">
+                                        <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Sửa</a>
+                                        <a href="delete_product.php?id=<?php echo $row['id']; ?>"
+                                           class="btn btn-danger"
+                                           onclick="return confirm('Xóa sản phẩm này?')">
+                                           Xóa
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-            <script src="/webbanhang/assets/js/admin.js"></script>
-</body>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="5" style="text-align:center;">Chưa có sản phẩm nào.</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
 
-</html>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<?php include("../includes/footer_admin.php"); ?>

@@ -1,18 +1,53 @@
 <?php
-
 include("../config/database.php");
 include("../includes/header.php");
 
-$id = $_GET['id'];
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    $error = "Không tìm thấy bài viết!";
+} else {
+    $id = (int)$_GET['id'];
+    $query = "SELECT * FROM posts WHERE id = $id";
+    $result = mysqli_query($conn, $query);
 
-$query = "SELECT * FROM posts WHERE id=$id";
-$result = mysqli_query($conn,$query);
-$post = mysqli_fetch_assoc($result);
-
-$newPosts = mysqli_query($conn,"SELECT id,title FROM posts ORDER BY id DESC LIMIT 5");
+    if (!$result || mysqli_num_rows($result) == 0) {
+        $error = "Bài viết không tồn tại!";
+    } else {
+        $post = mysqli_fetch_assoc($result);
+        $newPosts = mysqli_query($conn, "SELECT id, title FROM posts ORDER BY id DESC LIMIT 5");
+    }
+}
 ?>
 
 <style>
+body {
+    padding-top: 120px;
+    background: #f5f0dc;
+}
+
+.error-box {
+    max-width: 700px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.error-box h2 {
+    color: #3E2723;
+    margin-bottom: 15px;
+}
+
+.error-box a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 18px;
+    background: #6F4E37;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+}
 .post-container {
     max-width: 90%;
     margin: 40px auto;
@@ -99,7 +134,13 @@ $newPosts = mysqli_query($conn,"SELECT id,title FROM posts ORDER BY id DESC LIMI
 }
 </style>
 
-<div class="post-container">
+<?php if (isset($error)) { ?>
+    <div class="error-box">
+        <h2><?php echo $error; ?></h2>
+        <a href="/webbanhang/pages/posts.php">Quay lại danh sách bài viết</a>
+    </div>
+<?php } else { ?>
+    <div class="post-container">
 
     <div class="main-post">
         <img class="post-image" src="../assets/images/<?php echo $post['image']; ?>" alt="">
@@ -126,5 +167,6 @@ $newPosts = mysqli_query($conn,"SELECT id,title FROM posts ORDER BY id DESC LIMI
     </div>
 
 </div>
+<?php } ?>
 
 <?php include("../includes/footer.php"); ?>

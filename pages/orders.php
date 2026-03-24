@@ -2,21 +2,14 @@
 session_start();
 include("../config/database.php");
 
-// nếu chưa đăng nhập thì bắt login
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) || !isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
-    exit;
+    exit();
 }
 
-// nếu có lưu user_id trong session thì lọc theo user đó
-if (isset($_SESSION['user_id'])) {
-    $user_id = (int)$_SESSION['user_id'];
-    $query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY id DESC";
-} else {
-    // fallback nếu chưa có user_id thì vẫn lấy toàn bộ
-    $query = "SELECT * FROM orders ORDER BY id DESC";
-}
+$user_id = (int)$_SESSION['user_id'];
 
+$query = "SELECT * FROM orders WHERE user_id = $user_id ORDER BY id DESC";
 $result = mysqli_query($conn, $query);
 
 include("../includes/header.php");
@@ -25,6 +18,7 @@ include("../includes/header.php");
 <style>
 body {
     background: #f6f6f6;
+    padding-top: 120px;
 }
 
 .orders-container {
@@ -74,6 +68,7 @@ body {
     font-size: 14px;
     font-weight: 700;
     display: inline-block;
+    text-transform: capitalize;
 }
 
 .status-pending {
@@ -183,23 +178,26 @@ body {
             <a href="products.php" class="shop-btn">Tiếp tục mua sắm</a>
         </div>
     <?php } else { ?>
-        <?php while($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
             <?php
                 $status = isset($row['status']) ? $row['status'] : 'pending';
                 $status_class = 'status-default';
+                $status_text = 'Đang xử lý';
 
                 if ($status == 'pending') {
                     $status_class = 'status-pending';
+                    $status_text = 'Chờ xử lý';
                 } elseif ($status == 'paid') {
                     $status_class = 'status-paid';
+                    $status_text = 'Đã thanh toán';
                 }
             ?>
 
             <div class="order-card">
                 <div class="order-top">
-                    <div class="order-id">Đơn hàng #<?php echo $row['id']; ?></div>
+                    <div class="order-id">Đơn hàng #<?php echo (int)$row['id']; ?></div>
                     <div class="order-status <?php echo $status_class; ?>">
-                        <?php echo htmlspecialchars($status); ?>
+                        <?php echo $status_text; ?>
                     </div>
                 </div>
 
@@ -207,7 +205,7 @@ body {
                     <div class="info-box">
                         <div class="info-label">Tổng tiền</div>
                         <div class="info-value">
-                            <?php echo number_format((float)$row['total'], 0, ',', '.'); ?> đ
+                            <?php echo number_format((float)$row['total'], 0, ',', '.'); ?> VNĐ
                         </div>
                     </div>
 
@@ -227,7 +225,7 @@ body {
                 </div>
 
                 <div class="order-actions">
-                    <a href="/webbanhang/pages/order_detail.php?id=<?php echo $row['id']; ?>" class="view-btn">
+                    <a href="/webbanhang/pages/order_detail.php?id=<?php echo (int)$row['id']; ?>" class="view-btn">
                         Xem chi tiết
                     </a>
                 </div>

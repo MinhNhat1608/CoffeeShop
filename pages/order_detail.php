@@ -2,35 +2,36 @@
 session_start();
 include("../config/database.php");
 
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
-    exit;
+if (!isset($_SESSION['user']) || !isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
 }
 
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-if ($id <= 0) {
-    die("Đơn hàng không hợp lệ");
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: /webbanhang/pages/orders.php");
+    exit();
 }
 
-// lấy thông tin đơn hàng
-$order_query = "SELECT * FROM orders WHERE id = $id";
+$user_id = (int)$_SESSION['user_id'];
+$order_id = (int)$_GET['id'];
+
+$order_query = "SELECT * FROM orders WHERE id = $order_id AND user_id = $user_id LIMIT 1";
 $order_result = mysqli_query($conn, $order_query);
+
+if (!$order_result || mysqli_num_rows($order_result) == 0) {
+    header("Location: /webbanhang/pages/orders.php");
+    exit();
+}
+
 $order = mysqli_fetch_assoc($order_result);
 
-if (!$order) {
-    die("Không tìm thấy đơn hàng");
-}
-
-// lấy chi tiết đơn hàng + tên sản phẩm + ảnh
-$detail_query = "
-    SELECT od.*, p.name, p.image
+$order_items_query = "
+    SELECT od.*, p.name AS product_name, p.image AS product_image
     FROM order_details od
     LEFT JOIN products p ON od.product_id = p.id
-    WHERE od.order_id = $id
-    ORDER BY od.id DESC
+    WHERE od.order_id = $order_id
 ";
-$detail_result = mysqli_query($conn, $detail_query);
+$order_items_result = mysqli_query($conn, $order_items_query);
 
 include("../includes/header.php");
 ?>
@@ -38,49 +39,48 @@ include("../includes/header.php");
 <style>
 body {
     background: #f6f6f6;
+    padding-top: 120px;
 }
 
-.detail-container {
+.order-detail-container {
     width: 90%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 40px auto;
 }
 
-.detail-title {
-    font-size: 32px;
-    font-weight: 700;
+.page-title {
+    font-size: 40px;
+    font-weight: 800;
     color: #2d1b12;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
-.detail-grid {
+.order-layout {
     display: grid;
-    grid-template-columns: 0.95fr 1.05fr;
-    gap: 24px;
-    margin-bottom: 24px;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 22px;
 }
 
-.info-card,
-.items-card {
+.order-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 18px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-    padding: 24px;
+    padding: 22px;
 }
 
 .card-title {
     font-size: 22px;
-    font-weight: 700;
-    color: #3b2418;
-    margin-bottom: 18px;
+    font-weight: 800;
+    color: #2d1b12;
+    margin-bottom: 22px;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
-    gap: 16px;
-    padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .info-row:last-child {
@@ -89,21 +89,22 @@ body {
 
 .info-label {
     color: #777;
-    font-weight: 500;
+    font-size: 15px;
 }
 
 .info-value {
     color: #2d1b12;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     text-align: right;
 }
 
 .status-badge {
-    padding: 6px 12px;
+    display: inline-block;
+    padding: 8px 14px;
     border-radius: 999px;
     font-size: 14px;
     font-weight: 700;
-    display: inline-block;
 }
 
 .status-pending {
@@ -124,8 +125,8 @@ body {
 .product-item {
     display: flex;
     gap: 16px;
-    padding: 16px 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .product-item:last-child {
@@ -133,11 +134,11 @@ body {
 }
 
 .product-item img {
-    width: 92px;
-    height: 92px;
+    width: 82px;
+    height: 82px;
     object-fit: cover;
     border-radius: 12px;
-    background: #fafafa;
+    flex-shrink: 0;
 }
 
 .product-info {
@@ -146,51 +147,55 @@ body {
 
 .product-name {
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 800;
     color: #2d1b12;
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 .product-meta {
     color: #777;
-    margin-bottom: 6px;
+    font-size: 15px;
+    margin-bottom: 8px;
 }
 
-.product-price {
-    color: #d35400;
-    font-weight: 700;
+.product-subtotal {
+    color: #e36414;
+    font-size: 18px;
+    font-weight: 800;
 }
 
-.total-box {
+.summary-box {
     margin-top: 18px;
-    padding-top: 16px;
-    border-top: 2px dashed #eee;
+    padding-top: 14px;
+    border-top: 2px dashed #e6ddd5;
 }
 
-.total-row {
+.summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    color: #555;
+    padding: 8px 0;
+    color: #666;
+    font-size: 15px;
 }
 
-.total-final {
+.summary-total {
     display: flex;
     justify-content: space-between;
-    font-size: 22px;
-    font-weight: 700;
-    color: #d35400;
+    margin-top: 8px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #e36414;
 }
 
 .back-btn {
     display: inline-block;
-    padding: 10px 18px;
+    margin-top: 20px;
+    padding: 12px 18px;
     background: #8b5e3c;
     color: #fff;
     text-decoration: none;
     border-radius: 10px;
-    font-weight: 600;
-    transition: 0.2s;
+    font-weight: 700;
 }
 
 .back-btn:hover {
@@ -198,48 +203,47 @@ body {
 }
 
 @media (max-width: 900px) {
-    .detail-grid {
+    .order-layout {
         grid-template-columns: 1fr;
     }
 
-    .info-row {
-        flex-direction: column;
-    }
-
-    .info-value {
-        text-align: left;
+    .page-title {
+        font-size: 30px;
     }
 }
 </style>
 
-<div class="detail-container">
-    <div class="detail-title">Chi tiết đơn hàng #<?php echo $order['id']; ?></div>
+<?php
+$status = isset($order['status']) ? $order['status'] : 'pending';
+$status_class = 'status-default';
+$status_text = 'Đang xử lý';
 
-    <div class="detail-grid">
-        <div class="info-card">
+if ($status == 'pending') {
+    $status_class = 'status-pending';
+    $status_text = 'Chờ xử lý';
+} elseif ($status == 'paid') {
+    $status_class = 'status-paid';
+    $status_text = 'Đã thanh toán';
+}
+?>
+
+<div class="order-detail-container">
+    <div class="page-title">Chi tiết đơn hàng #<?php echo (int)$order['id']; ?></div>
+
+    <div class="order-layout">
+        <div class="order-card">
             <div class="card-title">Thông tin đơn hàng</div>
-
-            <?php
-                $status = isset($order['status']) ? $order['status'] : 'pending';
-                $status_class = 'status-default';
-
-                if ($status == 'pending') {
-                    $status_class = 'status-pending';
-                } elseif ($status == 'paid') {
-                    $status_class = 'status-paid';
-                }
-            ?>
 
             <div class="info-row">
                 <div class="info-label">Mã đơn hàng</div>
-                <div class="info-value">#<?php echo $order['id']; ?></div>
+                <div class="info-value">#<?php echo (int)$order['id']; ?></div>
             </div>
 
             <div class="info-row">
                 <div class="info-label">Trạng thái</div>
                 <div class="info-value">
                     <span class="status-badge <?php echo $status_class; ?>">
-                        <?php echo htmlspecialchars($status); ?>
+                        <?php echo $status_text; ?>
                     </span>
                 </div>
             </div>
@@ -308,45 +312,44 @@ body {
             </div>
         </div>
 
-        <div class="items-card">
+        <div class="order-card">
             <div class="card-title">Sản phẩm trong đơn</div>
 
             <?php
-            $grand_total = 0;
-            if ($detail_result && mysqli_num_rows($detail_result) > 0) {
-                while($row = mysqli_fetch_assoc($detail_result)) {
-                    $qty = (int)$row['quantity'];
-                    $price = (float)$row['price'];
-                    $subtotal = $qty * $price;
-                    $grand_total += $subtotal;
+            $subtotal = 0;
+            if ($order_items_result && mysqli_num_rows($order_items_result) > 0) {
+                while ($item = mysqli_fetch_assoc($order_items_result)) {
+                    $qty = isset($item['quantity']) ? (int)$item['quantity'] : 0;
+                    $price = isset($item['price']) ? (float)$item['price'] : 0;
+                    $line_total = $qty * $price;
+                    $subtotal += $line_total;
             ?>
                 <div class="product-item">
-                    <img src="../uploads/<?php echo htmlspecialchars($row['image']); ?>" alt="">
-
+                    <img src="../assets/images/<?php echo htmlspecialchars($item['product_image']); ?>" alt="">
                     <div class="product-info">
-                        <div class="product-name"><?php echo htmlspecialchars($row['name']); ?></div>
+                        <div class="product-name"><?php echo htmlspecialchars($item['product_name']); ?></div>
                         <div class="product-meta">Số lượng: <?php echo $qty; ?></div>
                         <div class="product-meta">Đơn giá: <?php echo number_format($price, 0, ',', '.'); ?> đ</div>
-                        <div class="product-price">Tạm tính: <?php echo number_format($subtotal, 0, ',', '.'); ?> đ</div>
+                        <div class="product-subtotal">Tạm tính: <?php echo number_format($line_total, 0, ',', '.'); ?> đ</div>
                     </div>
                 </div>
             <?php
                 }
             } else {
-                echo "<p>Không có sản phẩm nào trong đơn hàng này.</p>";
+                echo "<p>Không có sản phẩm nào trong đơn.</p>";
             }
             ?>
 
-            <div class="total-box">
-                <div class="total-row">
+            <div class="summary-box">
+                <div class="summary-row">
                     <span>Tạm tính</span>
-                    <span><?php echo number_format($grand_total, 0, ',', '.'); ?> đ</span>
+                    <span><?php echo number_format($subtotal, 0, ',', '.'); ?> đ</span>
                 </div>
-                <div class="total-row">
+                <div class="summary-row">
                     <span>Phí vận chuyển</span>
                     <span>0 đ</span>
                 </div>
-                <div class="total-final">
+                <div class="summary-total">
                     <span>Tổng cộng</span>
                     <span><?php echo number_format((float)$order['total'], 0, ',', '.'); ?> đ</span>
                 </div>
