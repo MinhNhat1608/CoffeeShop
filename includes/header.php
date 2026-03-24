@@ -1,4 +1,8 @@
-<?php session_start(); ?>
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -118,7 +122,7 @@
         <div class="container header-container">
             <a href="/webbanhang/index.php" class="logo">
                 <i class="fa-solid fa-mug-hot logo-icon"></i>
-                <div class="logo-text">CoF<span>Fee</span></div>
+                <div class="logo-text">Brewza CoF<span>Fee</span></div>
             </a>
 
             <nav>

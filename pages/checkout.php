@@ -3,7 +3,7 @@ session_start();
 include("../config/database.php");
 
 if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
 
@@ -141,14 +141,14 @@ textarea.form-control {
 
 .summary-item {
     display: flex;
-    gap: 14px;
+    gap: 20px;
     padding: 12px 0;
     border-bottom: 1px solid #f0f0f0;
 }
 
 .summary-item img {
-    width: 72px;
-    height: 72px;
+    width: 200px;
+    height: 100px;
     object-fit: cover;
     border-radius: 12px;
 }
@@ -325,7 +325,7 @@ textarea.form-control {
             $subtotal = $price * $qty;
             ?>
             <div class="summary-item">
-                <img src="../uploads/<?php echo htmlspecialchars($item['image']); ?>" alt="">
+                <img src="../assets/images/<?php echo htmlspecialchars($item['image']); ?>" alt="">
                 <div class="summary-info">
                     <div class="summary-name"><?php echo htmlspecialchars($item['name']); ?></div>
                     <div class="summary-meta">Số lượng: <?php echo $qty; ?></div>

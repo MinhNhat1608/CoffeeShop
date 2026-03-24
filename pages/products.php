@@ -30,7 +30,7 @@ $categories = mysqli_query($conn, $cat_query);
     <div class="container">
 
         <div class="section-header">
-            <div class="section-subtitle">Coffee Shop</div>
+            <div class="section-subtitle">Brewza Coffee</div>
             <h2 class="section-title">Sản Phẩm Của Chúng Tôi</h2>
         </div>
 
@@ -54,7 +54,7 @@ $categories = mysqli_query($conn, $cat_query);
 
             <div class="product-card">
                 <div class="product-img">
-                    <img src="../uploads/<?php echo $row['image']; ?>">
+                    <img src="../assets/images/<?php echo $row['image']; ?>">
                 </div>
 
                 <div class="product-info">

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="footer-content">
             <div class="footer-column">
-                <h3>About CoFFee</h3>
+                <h3> About Brewza Coffee</h3>
                 <div class="social-links">
                     <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -27,7 +27,7 @@
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt"></i> 123 Coffee Lane, TP.HCM, Việt Nam</li>
                     <li><i class="fas fa-phone"></i> 123456789</li>
-                    <li><i class="fas fa-envelope"></i> coffee@gmail.com</li>
+                    <li><i class="fas fa-envelope"></i> BrewzaCoffee@gmail.com</li>
                     <li><i class="fas fa-clock"></i> Thứ 2 - Thứ 7: 7:00 - 20:00</li>
                 </ul>
             </div>

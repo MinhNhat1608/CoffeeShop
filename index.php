@@ -65,7 +65,7 @@ $result_featured = mysqli_query($conn, $sql_featured);
                         <p class="product-desc"><?php echo $row['description']; ?></p>
 
                         <div class="product-footer">
-                            <div class="product-price"><?php echo number_format($row['price'], 0, ',', '.'); ?>đ</div>
+                            <div class="product-price"><?php echo number_format($row['price'], 0, ',', '.'); ?>VNĐ</div>
                             <div class="rating">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
