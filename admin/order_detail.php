@@ -19,13 +19,12 @@ if ($id > 0) {
 ?>
 <style>
     body {
-        background: radial-gradient(circle at top, #1a1a1a, #0d0d0d);
         color: #fff;
         font-family: 'Segoe UI', sans-serif;
     }
 
     .order-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         border-radius: 20px;
         padding: 25px;
         backdrop-filter: blur(12px);
@@ -41,18 +40,23 @@ if ($id > 0) {
     }
 
     .table-custom th {
-        background: linear-gradient(135deg, #8b5e3c, #c89b6d);
+        background-color: #734019;
         color: white;
         padding: 12px;
     }
 
     .table-custom td {
         padding: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(222, 164, 114, 0.1);
+    }
+
+    .table-custom tr {
+        background-color: #c89b6d;
     }
 
     .table-custom tr:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(241, 151, 121, 0.05);
         transition: 0.3s;
     }
 

@@ -35,7 +35,7 @@ VALUES('$title','$content','$description','$image')";
         margin-left: 550px;
         padding: 20px;
         border-radius: 20px;
-        background: rgba(44, 30, 20, 0.6);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border: 1px solid rgba(200, 155, 109, 0.2);
@@ -47,7 +47,7 @@ VALUES('$title','$content','$description','$image')";
         text-align: center;
         margin-bottom: 30px;
         font-size: 28px;
-        color: #c89b6d;
+        color: #f3e5d8;
         font-weight: bold;
         font-size: 28px;
     }
@@ -60,7 +60,7 @@ VALUES('$title','$content','$description','$image')";
         display: block;
         margin-bottom: 10px;
         font-weight: 500;
-        color: #d2b48c;
+        color: #f3e5d8;
         font-size: 20px;
     }
 
@@ -153,7 +153,7 @@ VALUES('$title','$content','$description','$image')";
     }
 
     .btn-back {
-        color: #c89b6d;
+        color: #e3c530;
         text-decoration: none;
         font-size: 14px;
         transition: 0.3s;

@@ -30,7 +30,6 @@ if (isset($_POST['add'])) {
 
 <style>
     body {
-        background: #0d0d0d;
         color: white;
         font-family: Arial;
     }
@@ -39,17 +38,17 @@ if (isset($_POST['add'])) {
         max-width: 1200px;
         width: 50%;
         margin: 40px auto;
-        margin-left: 550px;
+        margin-left: 500px;
         display: flex;
         justify-content: center;
         align-items: center;
         padding: 20px;
         box-sizing: border-box;
-        background: #0d0d0d;
+ 
     }
 
     .card {
-        background: linear-gradient(135deg, #3b2318, #1f1410);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         padding: 30px;
         border-radius: 15px;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
@@ -99,7 +98,7 @@ if (isset($_POST['add'])) {
         padding: 10px;
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.2);
-        background: #2b1b15;
+        background: #7f412a;
         color: white;
     }
 

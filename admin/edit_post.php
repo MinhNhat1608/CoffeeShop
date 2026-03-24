@@ -26,7 +26,6 @@ WHERE id=$id";
 ?>
 <style>
     body {
-        background-color: #0c0805;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         margin: 0;
     }
@@ -38,7 +37,7 @@ WHERE id=$id";
         margin-left: 550px;
         padding: 20px 60px;
         border-radius: 30px;
-        background: #1e150e;
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         border: 1px solid rgba(200, 155, 109, 0.2);
         box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
         color: #f3e5d8;
@@ -72,7 +71,7 @@ WHERE id=$id";
         padding: 15px;
         border-radius: 12px;
         border: 1px solid rgba(200, 155, 109, 0.3);
-        background: #130c08;
+        background: #7f412a;
         color: #fff;
         font-size: 16px;
         box-sizing: border-box;

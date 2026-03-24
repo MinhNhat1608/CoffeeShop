@@ -31,7 +31,7 @@ $result = mysqli_query($conn, $query);
 
 <style>
     .category-box {
-        background: linear-gradient(145deg, #2c1b14, #1a120d);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         padding: 25px;
         border-radius: 15px;
         margin: 20px auto;
@@ -76,7 +76,7 @@ $result = mysqli_query($conn, $query);
     }
 
     th {
-        background: #5a3b2e;
+        background: #764733;
         padding: 12px;
     }
 
@@ -114,6 +114,7 @@ $result = mysqli_query($conn, $query);
             <button name="add">+ Add</button>
         </form>
 
+        <div class="table-section">
         <table>
             <thead>
                 <tr>
@@ -140,6 +141,7 @@ $result = mysqli_query($conn, $query);
                 <?php } ?>
             </tbody>
         </table>
+    </div>
     </div>
 
 </main>

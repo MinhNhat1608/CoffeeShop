@@ -23,7 +23,7 @@ $result = mysqli_query($conn, $query);
 
 <style>
     .product-box {
-        background: linear-gradient(145deg, #2c1b14, #1a120d);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         padding: 25px;
         border-radius: 15px;
         margin: 20px;

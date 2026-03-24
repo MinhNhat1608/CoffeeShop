@@ -39,20 +39,19 @@ if(isset($_POST['update'])){
 ?>
 <style>
 body{
-    background:#0d0d0d;
     color:white;
     font-family: Arial;
 }
 
 .container{
-    margin-left:500px;
+    margin-left:400px;
     padding:30px;
     display:flex;
     justify-content:center;
 }
 
 .card{
-    background: linear-gradient(135deg, #3b2318, #1f1410);
+    background: linear-gradient(145deg, #9c593b, #8a4e29);
     padding:25px;
     border-radius:15px;
     box-shadow: 0 0 25px rgba(0,0,0,0.6);
@@ -86,7 +85,7 @@ input, select, textarea{
     padding:10px;
     border-radius:8px;
     border:1px solid rgba(255,255,255,0.2);
-    background:#2b1b15;
+    background:#7f412a;
     color:white;
     font-size: 20px;
 }

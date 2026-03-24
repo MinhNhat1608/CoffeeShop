@@ -39,6 +39,42 @@ $total_posts = mysqli_fetch_assoc($post_result)['total_posts'];
             gap: 10px;
         }
 
+        .card {
+            background: #d5956b;
+            padding: 25px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            transition: 0.25s;
+            font-size: 20px;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .table-section {
+            background: #efe2cf;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-box {
+            background: linear-gradient(145deg, #9c593b, #8a4e29);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px;
+            color: #fff;
+        }
+
+        .product-box h3 {
+            color: #f1c40f;
+            font-size: 28px;
+            padding-bottom: 15px;
+        }
+
         .btn {
             padding: 6px 12px;
             border-radius: 6px;
@@ -115,42 +151,48 @@ $total_posts = mysqli_fetch_assoc($post_result)['total_posts'];
                 </div>
             </div>
 
-            <div class="table-section">
+            <div class="product-box">
                 <h3>Recent Products</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Image</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                <div class="table-section">
+
+                    <table>
+                        <thead>
                             <tr>
-                                <td><?php echo $row['name']; ?></td>
-                                <td><?php echo number_format($row['price']); ?> VNĐ</td>
-                                <td>
-                                    <img src="../assets/images/<?php echo $row['image']; ?>" width="60">
-                                </td>
-                                <td>
-                                <td class="actions">
-                                    <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="btn edit">
-                                        <i></i> Edit
-                                    </a>
-                                    <a href="delete_product.php?id=<?php echo $row['id']; ?>"
-                                        class="btn delete"
-                                        onclick="return confirm('Xóa sản phẩm này?')">
-                                        <i></i> Delete
-                                    </a>
-                                </td>
-                                </td>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Image</th>
+                                <th>Action</th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                <tr>
+                                    <td><?php echo $row['name']; ?></td>
+                                    <td><?php echo number_format($row['price']); ?> VNĐ</td>
+                                    <td>
+                                        <img src="../assets/images/<?php echo $row['image']; ?>" width="60">
+                                    </td>
+
+                                    <td class="actions">
+                                        <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="btn edit">
+                                            <i></i> Edit
+                                        </a>
+                                        <a href="delete_product.php?id=<?php echo $row['id']; ?>"
+                                            class="btn delete"
+                                            onclick="return confirm('Xóa sản phẩm này?')">
+                                            <i></i> Delete
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <script src="/webbanhang/assets/js/admin.js"></script>
+        </main>
+    </div>
+    <script src="/webbanhang/assets/js/admin.js"></script>
 </body>
 
 </html>

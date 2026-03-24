@@ -31,7 +31,7 @@ WHERE id=$id";
         margin-left: 550px;
         padding: 80px;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.05);
+        background: linear-gradient(145deg, #9c593b, #8a4e29);
         backdrop-filter: blur(12px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -91,7 +91,7 @@ WHERE id=$id";
         display: inline-block;
         margin-top: 15px;
         text-decoration: none;
-        color: #c89b6d;
+        color: #f2c83d;
     }
 </style>
 
